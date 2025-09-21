@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}{{ action }} Project{% endblock %}
+
+{% block content %}
+    <h1>{{ action }} Project</h1>
+    <form method="post">
+        <label for="name">Project Name:</label>
+        <input type="text" id="name" name="name" value="{{ project.name if project else '' }}" required>
+        
+        <label for="description">Description:</label>
+        <textarea id="description" name="description">{{ project.description if project else '' }}</textarea>
+        
+        <button type="submit" class="btn">Save Project</button>
+    </form>
+{% endblock %}
+
