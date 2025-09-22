@@ -52,21 +52,16 @@ def update_user(user_id, username, email, password):
     """Updates an existing user's details."""
     user = get_user_by_id(user_id)
     if not user:
-        return None, "User not found."
-
-    # Check if the new username or email is already taken by another user
-    existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
-    if existing_user:
-        return False, "Username or email already exists." # Return None to indicate failure due to duplicate data
+        return False, "User not found."
 
     user.username = username
     user.email = email
     
-    # Only update the password if a new one was provided in the form
     if password:
         user.password_hash = generate_password_hash(password)
         
     db.session.commit()
+    
     return True, "User updated successfully."
 def delete_user(user_id):
     """Deletes a user from the database."""
