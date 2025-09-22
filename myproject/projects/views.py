@@ -15,7 +15,7 @@ def list_all_projects():
     projects = sorted(all_projects, key=lambda project: project.id)
     return render_template('list_projects.html', projects=projects)
 
-@projects_bp.route('/new', methods=['POST'])
+@projects_bp.route('/new', methods=['GET','POST'])
 @jwt_required()
 def add_project():
     """Handles creating a new project."""
@@ -31,7 +31,7 @@ def add_project():
             flash(message, 'danger')
     return render_template('project_form.html', action='Add New')
 
-@projects_bp.route('/edit/<int:project_id>', methods=['POST'])
+@projects_bp.route('/edit/<int:project_id>', methods=['GET','POST'])
 @jwt_required()
 def edit_project(project_id):
     """Handles editing an existing project."""
