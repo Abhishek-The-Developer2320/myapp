@@ -51,3 +51,10 @@ def delete_project_by_id(project_id):
     
     return True, "Project deleted successfully."
 
+def get_project_with_tasks(project_id):
+    """Fetch a project along with its tasks."""
+    project = get_project_by_id(project_id)
+    if project:
+        return project.tasks  # Assumes SQLAlchemy relationship 'tasks' exists
+    return []
+

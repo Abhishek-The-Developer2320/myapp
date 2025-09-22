@@ -12,9 +12,9 @@ def get_task_by_id(task_id):
     """Fetches a single task by its ID."""
     return Task.query.get(task_id)
 
-def create_task(title, description, project_id):
+def create_task(title, description, project_id,user_id):
     """Creates a new task and saves it to the database."""
-    new_task = Task(title=title, description=description, project_id=project_id)
+    new_task = Task(title=title, description=description, project_id=project_id,user_id=user_id)
     db.session.add(new_task)
     db.session.commit()
     return new_task

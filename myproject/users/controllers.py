@@ -55,7 +55,7 @@ def update_user(user_id, username, email, password):
         return None, "User not found."
 
     # Check if the new username or email is already taken by another user
-    existing_user = User.query.filter(User.id != user_id, (User.username == username) | (User.email == email)).first()
+    existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
     if existing_user:
         return False, "Username or email already exists." # Return None to indicate failure due to duplicate data
 

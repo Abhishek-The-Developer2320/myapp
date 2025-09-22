@@ -3,35 +3,46 @@
 {% block title %}Tasks{% endblock %}
 
 {% block content %}
-    <h1>All Tasks</h1>
-    <a href="{{ url_for('tasks.add_task') }}" class="btn btn-add">Add New Task</a>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Task Title</th>
-                <th>Project</th>
-                <th>Description</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for task in tasks %}
-            <tr>
-                <td>{{ task.id }}</td>
-                <td>{{ task.title }}</td>
-                <td>{{task.description}}</td>
-                <td>{{ task.project.name if task.project else 'N/A' }}</td>
-                <td>
-                    <a href="{{ url_for('tasks.edit_task', task_id=task.id) }}" class="btn">Edit</a>
-                    <form action="{{ url_for('tasks.delete_task_route', task_id=task.id) }}" method="post" style="display:inline;">
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% endblock %}
+<h1>All Tasks</h1>
+<a href="{{ url_for('tasks.add_task') }}" class="btn btn-add">Add New Task</a>
 
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Task Title</th>
+            <th>Project</th>
+            <th>Description</th>
+            {% if current_user.is_admin %}
+            <th>Actions</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task.id }}</td>
+            <td>{{ task.title }}</td>
+            <td>
+                {% if task.project %}
+                <a href="{{ url_for('projects.view_project_tasks', project_id=task.project.id) }}">
+                    {{ task.project.name }}
+                </a>
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+            <td>{{ task.description }}</td>
+            <td>
+                {% if current_user.is_admin or current_user.id == task.user_id %}
+                <a href="{{ url_for('tasks.edit_task', task_id=task.id) }}" class="btn">Edit</a>
+                <form action="{{ url_for('tasks.delete_task_route', task_id=task.id) }}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

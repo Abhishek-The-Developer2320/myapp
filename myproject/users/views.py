@@ -74,6 +74,11 @@ def list_all_users():
 @jwt_required()
 def edit_user(user_id):
     """Handles editing an existing user."""
+    current_user_id = get_jwt_identity()
+    actor= get_user_by_id(int(current_user_id))
+    if actor.is_admin:
+        flash("You do not have permission to edit users.", "danger")
+        return redirect(url_for('users.list_all_users'))
     user = get_user_by_id(user_id)
     if not user:
         flash('User not found.', 'danger')
@@ -102,23 +107,14 @@ def delete_user_route(user_id): # <-- **THE FIX**: Renamed function to avoid con
     """Handles deleting a user."""
     # Prevent a user from deleting their own account
     current_user_id = get_jwt_identity()
-    # actor = get_user_by_id(int(current_user_id))
-    # if actor and not actor.is_admin:
-    #     flash('You do not have permission to delete users.', 'danger')
-    #     return (redirect(url_for('users/list_all_users')))
-    if str(user_id) == current_user_id:
-        flash('You cannot delete your own account.', 'danger')
-        return redirect(url_for('users.list_all_users'))
-    # ** THE NEW SECURITY CHECK **
+    actor = get_user_by_id(int(current_user_id))
+    if actor and not actor.is_admin:
+        flash('You do not have permission to delete users.', 'danger')
+        return (redirect(url_for('users/list_all_users')))
     # Get the user object that is being targeted for deletion
-    user_to_delete = get_user_by_id(user_id)
+
     
     # Now, check if that user is an admin
-    if user_to_delete and user_to_delete.is_admin:
-        flash('You cannot delete an admin account. This action is not permitted.', 'danger')
-        return redirect(url_for('users.list_all_users'))
-
-    # Now this correctly calls the controller function
     success = delete_user(user_id)
     if success:
         flash('User deleted successfully.', 'success')
@@ -126,15 +122,16 @@ def delete_user_route(user_id): # <-- **THE FIX**: Renamed function to avoid con
         flash('User not found.', 'danger')
     return redirect(url_for('users.list_all_users'))
 
+    # Now this correctly calls the controller function
+   
 @users_bp.route('/admin-dashboard')
 @jwt_required()
 def admin_dashboard():
     """Displays the admin-only dashboard with counts."""
     current_user_id = get_jwt_identity()
-    user = get_user_by_id(int(current_user_id))
-    if not user or not user.is_admin:
+    current_user = get_user_by_id(int(current_user_id))
+    if not current_user or not current_user.is_admin:
         flash("You do not have permission to access this page.", "danger")
         return redirect(url_for('users.list_all_users'))
-
     counts = get_dashboard_counts()
-    return render_template('admin_dashboard.html', counts=counts,current_user=user)
+    return render_template('admin_dashboard.html', counts=counts,current_user=current_user)

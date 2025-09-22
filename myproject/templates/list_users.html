@@ -3,30 +3,39 @@
 {% block title %}Users{% endblock %}
 
 {% block content %}
-    <h1>All Users</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Email</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
-                <td>
-                    <a href="{{ url_for('users.edit_user', user_id=user.id) }}" class="btn">Edit</a>
-                    <form action="{{ url_for('users.delete_user_route', user_id=user.id) }}" method="post" style="display:inline;">
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% endblock %}
+<h1>All Users</h1>
 
+{% if current_user.is_admin %}
+<a href="{{ url_for('users.register') }}" class="btn btn-add">Add New User</a>
+{% endif %}
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Admin</th>
+            {% if current_user.is_admin %}<th>Actions</th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ 'Yes' if user.is_admin else 'No' }}</td>
+            {% if current_user.is_admin %}
+            <td class="actions-cell">
+                <a href="{{ url_for('users.edit_user', user_id=user.id) }}" class="btn">Edit</a>
+                <form method="POST" action="{{ url_for('users.delete_user_route', user_id=user.id) }}" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

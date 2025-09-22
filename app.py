@@ -3,7 +3,6 @@ from config import Config
 from myproject import db, migrate
 from flask_jwt_extended import JWTManager, get_jwt_identity, jwt_required
 from myproject.models import User
-import click
 # This function is the "Application Factory"
 # It creates and infigures the Flask application
 def create_app(config_class=Config):
@@ -41,20 +40,6 @@ def create_app(config_class=Config):
             return dict(current_user=user)
         # If no one is logged in, current_user will be None
         return dict(current_user=None)
-    
-    @app.cli.command("make-admin")
-    @click.argument("username")
-    def make_admin(username):
-        """Gives a user admin privileges."""
-    # We need an app context to interact with the database
-        with app.app_context():
-            user = User.query.filter_by(username=username).first()
-            if user:
-                user.is_admin = True
-                db.session.commit()
-                print(f"Success! User '{username}' has been promoted to admin.")
-            else:
-                print(f"Error: User '{username}' not found.")
 
     return app
 
