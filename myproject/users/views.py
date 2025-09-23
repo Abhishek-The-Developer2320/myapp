@@ -10,7 +10,7 @@ from flask_jwt_extended import jwt_required, unset_jwt_cookies, set_access_cooki
 
 @users_bp.route('/register', methods=['GET', 'POST'])
 def register():
-    """Handles the user registration page."""
+    
     if request.method == 'POST':
         username = request.form.get('username')
         email = request.form.get('email')
