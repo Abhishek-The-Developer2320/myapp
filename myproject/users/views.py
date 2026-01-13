@@ -28,7 +28,7 @@ def register():
 
 @users_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    """Handles the user login page."""
+  
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -53,7 +53,7 @@ def login():
 @users_bp.route('/logout')
 @jwt_required()
 def logout():
-    """Handles user logout."""
+  
     response = make_response(redirect(url_for('index')))
     unset_jwt_cookies(response)
     flash('You have been logged out.', 'success')
@@ -62,7 +62,7 @@ def logout():
 @users_bp.route('/')
 @jwt_required()
 def list_all_users():
-    """Displays a list of all users."""
+  
     all_users = get_all_users()
     users = sorted(all_users, key=lambda user: user.id)
     return render_template('list_users.html', users=users)
@@ -70,7 +70,7 @@ def list_all_users():
 @users_bp.route('/admin-dashboard')
 @jwt_required()
 def admin_dashboard():
-    """Displays the admin-only dashboard with counts."""
+  
     current_user_id = get_jwt_identity()
     user = get_user_by_id(int(current_user_id))
     if not user or not user.is_admin:
@@ -83,7 +83,7 @@ def admin_dashboard():
 @users_bp.route('/edit/<int:user_id>', methods=['GET', 'POST'])
 @jwt_required()
 def edit_user(user_id):
-    """Handles editing an existing user. Only accessible by admins."""
+   
     current_user_id = get_jwt_identity()
     actor = get_user_by_id(int(current_user_id))
     if not actor.is_admin:
@@ -113,7 +113,7 @@ def edit_user(user_id):
 @users_bp.route('/delete/<int:user_id>', methods=['POST'])
 @jwt_required()
 def delete_user_route(user_id):
-    """Handles deleting a user. Only accessible by admins."""
+ 
     # Rule 1: Check if the person performing the action is an admin.
     current_user_id = get_jwt_identity()
     actor = get_user_by_id(int(current_user_id))
