@@ -3,18 +3,16 @@ from config import Config
 from myproject import db, migrate
 from flask_jwt_extended import JWTManager, get_jwt_identity, jwt_required
 from myproject.models import User
-# This function is the "Application Factory"
-# It creates and infigures the Flask application
+
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    # Initialize extensions
+
     db.init_app(app)
     migrate.init_app(app, db)
     jwt = JWTManager(app) # Initialize JWT
 
-    # --- Register Blueprints ---
     from myproject.users.views import users_bp
     app.register_blueprint(users_bp, url_prefix='/users')
 
@@ -27,7 +25,7 @@ def create_app(config_class=Config):
     def index():
         return render_template('index.html')
 
-    # --- A simple route for the homepage ---
+   
     @app.context_processor
     @jwt_required(optional=True)
     def inject_user():
@@ -43,8 +41,7 @@ def create_app(config_class=Config):
 
     return app
 
-# The entry point for running the application
+
 if __name__ == '__main__':
     app = create_app()
-    # This runs the app on http://127.0.0.1:5000 in debug mode
     app.run(debug=True)
