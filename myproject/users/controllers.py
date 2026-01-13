@@ -4,10 +4,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token
 from flask import jsonify
 
-# This file contains the business logic for handling users.
+
 
 def register_user(username, email, password):
-    """Logic to create a new user."""
+   
     # Check if a user with the same username or email already exists
     if User.query.filter((User.username == username) | (User.email == email)).first():
         return False, "Username or email already exists."
@@ -27,7 +27,7 @@ def register_user(username, email, password):
     return True, "User registered successfully."
 
 def authenticate_user(username, password):
-    """Logic to check user credentials and create a JWT."""
+   
     # Find the user by their username
     user = User.query.filter_by(username=username).first()
 
@@ -42,14 +42,14 @@ def authenticate_user(username, password):
     return None,None
 
 def get_all_users():
-    """Logic to fetch all users from the database."""
+    
     # This queries the User table and returns all records.
     return User.query.all()
 def get_user_by_id(user_id):
     """Fetches a single user by their ID."""
     return User.query.get(user_id)
 def update_user(user_id, username, email, password):
-    """Updates an existing user's details."""
+  
     user = get_user_by_id(user_id)
     if not user:
         return False, "User not found."
@@ -64,7 +64,7 @@ def update_user(user_id, username, email, password):
     
     return True, "User updated successfully."
 def delete_user(user_id):
-    """Deletes a user from the database."""
+   
     user = get_user_by_id(user_id)
     if user:
         db.session.delete(user)
@@ -73,7 +73,7 @@ def delete_user(user_id):
     return False    
 
 def get_dashboard_counts():
-    """Gets the total counts for users, projects, and tasks."""
+   
     user_count = db.session.query(User).count()
     project_count = db.session.query(Project).count()
     task_count = db.session.query(Task).count()
