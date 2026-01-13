@@ -30,7 +30,6 @@ def create_app(config_class=Config):
     @jwt_required(optional=True)
     def inject_user():
     # Try to get the user's ID from the login token (JWT cookie)
-        
         user_id = get_jwt_identity()
         if user_id:
             # If the ID exists, find the user in the database
